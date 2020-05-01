@@ -7,35 +7,46 @@ public class OrbitRenderer : MonoBehaviour
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
     Mesh mesh;
+    public Vector3[] startEndPositions = new Vector3[2];
     // Start is called before the first frame update
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         mesh = new Mesh();
+        CreateMash();
     }
 
-    void MakeMash() { 
-
+    void CreateMash() {
+        Vector3 first = startEndPositions[0];
+        Vector3 second = startEndPositions[1];
+        int spacing = 10;
         Vector3[] vertices = new Vector3[4]
         {
-            new Vector3(0, 0, 0),
-            new Vector3(10, 0, 0),
-            new Vector3(0, 20, 0),
-            new Vector3(10, 20, 0)
+            new Vector3(first.x-spacing, first.y-spacing, first.z), // 0: bottom left
+            new Vector3(first.x+spacing, first.y-spacing, first.z), // 1: bottom right
+            new Vector3(first.x+spacing, first.y+spacing, first.z), // 2: top right
+            new Vector3(first.x-spacing, first.y+spacing, first.z), // 3: top left
         };
         mesh.vertices = vertices;
 
-        int[] tris = new int[6]
+        int[] indices = new int[6]
         {
             // lower left triangle
             0, 2, 1,
             // upper right triangle
             2, 3, 1
         };
-        mesh.triangles = tris;
+        mesh.triangles = indices;
 
-        mesh.RecalculateNormals();
+        Vector3[] normals = new Vector3[4]
+        {
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward
+        };
+        mesh.normals = normals;
 
         Vector2[] uv = new Vector2[4]
         {
@@ -47,11 +58,16 @@ public class OrbitRenderer : MonoBehaviour
         mesh.uv = uv;
 
         meshFilter.mesh = mesh;
+        mesh.RecalculateNormals();
 
     }
     // Update is called once per frame
     void Update()
     {
         
+    }
+    void OnValidate()
+    {
+        CreateMash();
     }
 }
