@@ -9,7 +9,7 @@ public class SpaceObjectPhysics : MonoBehaviour
     static List<SpaceObjectPhysics> spaceObjects = new List<SpaceObjectPhysics>();
 
     [SerializeField]
-    public static double universialGravitationalConstant = 0.0001;
+    public double universialGravitationalConstant = 0.0001;
 
     [SerializeField]
     Vector3 acceleration = new Vector3(0, 0, 0);
@@ -21,6 +21,8 @@ public class SpaceObjectPhysics : MonoBehaviour
 
     [SerializeField]
     public int mass = 100;
+
+    public float timeScale = 1;
 
     private void OnEnable()
     {
@@ -66,14 +68,15 @@ public class SpaceObjectPhysics : MonoBehaviour
     }
 
     void UpdateVelocity() {
-        velocity += acceleration;
-        rigidBody.position += velocity; 
+        velocity += acceleration * Time.deltaTime * timeScale;
+        rigidBody.position += velocity*Time.deltaTime * timeScale; 
         
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         print("tes");
+        Destroy(gameObject);
     }
 
 }
