@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SpaceObjectPhysics : MonoBehaviour
 {
-    static List<SpaceObjectPhysics> spaceObjects = new List<SpaceObjectPhysics>();
+    public static List<SpaceObjectPhysics> spaceObjects = new List<SpaceObjectPhysics>();
 
     [SerializeField]
     public double universialGravitationalConstant = 0.0001;
@@ -17,6 +17,10 @@ public class SpaceObjectPhysics : MonoBehaviour
     Vector3 velocity = new Vector3(0, 0, 0);
 
     private Rigidbody rigidBody;
+
+    public Vector3 orbitLinePosition = new Vector3();
+    public Vector3 orbitLineVelocity = new Vector3();
+    public Vector3 orbitLineAcceleration = new Vector3();
 
     [SerializeField]
     public int mass = 100;
@@ -35,21 +39,27 @@ public class SpaceObjectPhysics : MonoBehaviour
 
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody>(); 
+        rigidBody = GetComponent<Rigidbody>();
+        UpdateOrbitLineValuesFromReal();
     }
 
+    public void UpdateOrbitLineValuesFromReal() { 
+        orbitLinePosition = transform.position;
+        orbitLineVelocity = velocity;
+    }
+         
     // Update is called once per frame
     void Update()
     {
         
     }
+
     private void FixedUpdate()
     {
-        UpdateAcceleration();
-        UpdateVelocity();
+
     }
 
-    void UpdateAcceleration() {
+    public void UpdateAcceleration() {
         Vector3 netForce = new Vector3(0,0,0);
         foreach(SpaceObjectPhysics spaceObject in spaceObjects) {
            if(spaceObject == this) {
@@ -66,7 +76,28 @@ public class SpaceObjectPhysics : MonoBehaviour
         acceleration += netForce / mass;
     }
 
-    void UpdateVelocity() {
+    public void ObitLineUpdateAcceleration() { 
+        Vector3 netForce = new Vector3(0,0,0);
+        foreach(SpaceObjectPhysics spaceObject in spaceObjects) {
+           if(spaceObject == this) {
+                continue;
+           } 
+             
+            Vector3 directionVector = (spaceObject.orbitLinePosition - this.orbitLinePosition).normalized;
+
+            float distance = Mathf.Abs(Vector3.Distance(spaceObject.orbitLinePosition, this.orbitLinePosition));
+
+            Vector3 force = directionVector * (float)(universialGravitationalConstant * this.mass * spaceObject.mass / (distance * distance));
+            netForce += force;
+        }
+        this.orbitLineAcceleration += netForce / mass;
+    }
+
+    public void OrbitLineUpdatePosition(float timeStep) { 
+        this.orbitLineVelocity += acceleration * timeStep;
+        this.orbitLinePosition += velocity * timeStep; 
+    }
+    public void UpdatePosition() {
         velocity += acceleration * Time.deltaTime * timeScale;
         rigidBody.position += velocity*Time.deltaTime * timeScale; 
         
