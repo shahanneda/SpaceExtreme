@@ -7,8 +7,6 @@ public class SpaceObjectPhysics : MonoBehaviour
 {
     public static List<SpaceObjectPhysics> spaceObjects = new List<SpaceObjectPhysics>();
 
-    [SerializeField]
-    public double universialGravitationalConstant = 0.0001;
 
     [HideInInspector]
     private Vector3 acceleration = new Vector3(0, 0, 0);
@@ -64,15 +62,15 @@ public class SpaceObjectPhysics : MonoBehaviour
 
             float distance = Mathf.Abs(Vector3.Distance(spaceObject.transform.position, this.transform.position));
 
-            Vector3 force = directionVector * (float)(universialGravitationalConstant * this.mass * spaceObject.mass / (distance * distance));
+            Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.mass * spaceObject.mass / (distance * distance));
             netForce += force;
         }
         acceleration += netForce / mass;
     }
 
     public void UpdatePosition() {
-        velocity += acceleration * Time.deltaTime * timeScale;
-        rigidBody.position += velocity*Time.deltaTime * timeScale; 
+        velocity += acceleration * Time.deltaTime;
+        rigidBody.position += velocity * Time.deltaTime; 
         
     }
     public void OnValidate()

@@ -7,8 +7,6 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 {
     public static List<SpaceOrbitLinePhysics> spaceObjects = new List<SpaceOrbitLinePhysics>();
 
-    [SerializeField]
-    public double universialGravitationalConstant = 0.0001;
     [HideInInspector]
     public Vector3 orbitLinePosition = new Vector3(0,0,0);
     [HideInInspector]
@@ -68,15 +66,15 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
             float distance = Mathf.Abs(Vector3.Distance(spaceObject.orbitLinePosition, this.orbitLinePosition));
 
-            Vector3 force = directionVector * (float)(universialGravitationalConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
+            Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
         }
         this.orbitLineAcceleration += netForce / objectPhysics.mass;
     }
 
-    public void OrbitLineUpdatePosition(float timeStep)
+    public void OrbitLineUpdatePosition(float timeStep, float timeScale)
     {
-        this.orbitLineVelocity += orbitLineAcceleration * timeStep;
-        this.orbitLinePosition += orbitLineVelocity * timeStep;
+        this.orbitLineVelocity += orbitLineAcceleration * timeStep  * timeScale;
+        this.orbitLinePosition += orbitLineVelocity * timeStep * timeScale;
     }
 }
