@@ -65,7 +65,7 @@ public class SpaceObjectPhysics : MonoBehaviour
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.mass * spaceObject.mass / (distance * distance));
             netForce += force;
         }
-        acceleration += netForce / mass;
+        acceleration = netForce / mass;
     }
 
     public void UpdatePosition() {

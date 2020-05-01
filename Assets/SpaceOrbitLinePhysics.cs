@@ -69,7 +69,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
         }
-        this.orbitLineAcceleration += netForce / objectPhysics.mass;
+        this.orbitLineAcceleration = netForce / objectPhysics.mass;
     }
 
     public void OrbitLineUpdatePosition(float timeStep, float timeScale)

@@ -8,7 +8,7 @@ public class OrbitSimulation : MonoBehaviour
     public float timeStep = 0.5f;
     public float simLength = 1000;
 
-    public static float GravityConstant = 0.001f;
+    public static float GravityConstant = 0.01f;
     //public float timeScale = 0.01f;
 
     public float lastUpdateTime = 0;
@@ -45,10 +45,14 @@ public class OrbitSimulation : MonoBehaviour
             foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
             {
                 spaceObject.OrbitLineUpdateAcceleration();
-                spaceObject.OrbitLineUpdatePosition(timeStep, 1);
+            }
 
+            foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
+            {
+                spaceObject.OrbitLineUpdatePosition(timeStep, 1);
                 spaceObject.orbitLineOldPositions.Add(spaceObject.orbitLinePosition);
             }
+
         }
 
 
