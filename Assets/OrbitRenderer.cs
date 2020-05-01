@@ -20,45 +20,77 @@ public class OrbitRenderer : MonoBehaviour
     void CreateMash() {
         Vector3 first = startEndPositions[0];
         Vector3 second = startEndPositions[1];
-        int spacing = 10;
-        Vector3[] vertices = new Vector3[4]
+        int spacing = 1;
+
+        Vector3[] vertices = new Vector3[8]
         {
-            new Vector3(first.x-spacing, first.y-spacing, first.z), // 0: bottom left
-            new Vector3(first.x+spacing, first.y-spacing, first.z), // 1: bottom right
-            new Vector3(first.x+spacing, first.y+spacing, first.z), // 2: top right
-            new Vector3(first.x-spacing, first.y+spacing, first.z), // 3: top left
+            new Vector3(first.x, first.y, first.z), // bottom left
+            new Vector3(first.x+spacing, first.y, first.z), // bottom right
+            new Vector3(first.x+spacing, first.y+spacing, first.z), // top right
+            new Vector3(first.x, first.y+spacing, first.z), // top left
+            
+            new Vector3(second.x, second.y, second.z), // bottom left
+            new Vector3(second.x+spacing, second.y, second.z), // bottom right
+            new Vector3(second.x+spacing, second.y+spacing, second.z), // top right
+            new Vector3(second.x, second.y+spacing, second.z), // top left
+
+
         };
         mesh.vertices = vertices;
 
-        int[] indices = new int[6]
+        int[] tris = new int[36]
         {
-            // lower left triangle
-            0, 2, 1,
-            // upper right triangle
-            2, 3, 1
-        };
-        mesh.triangles = indices;
+            0, 2, 1, // tringle from bottom left -> bottom right -> top rigth
+            3, 2, 0, // triangle from top left -> top right -> bottom left
 
-        Vector3[] normals = new Vector3[4]
+
+            4, 6, 5, // tringle from bottom left -> bottom right -> top rigth
+            7, 6, 4, // triangle from top left -> top right -> bottom left
+            
+            1,6,5, //  right
+            1,2,6,
+
+            0,7,4, // left
+            0,7,4,
+
+            0,4,5, // bottom
+            0,1,5, 
+
+            6, 7, 3, 
+            3, 2, 6,
+        };
+        mesh.triangles = tris;
+
+        Vector3[] normals = new Vector3[8]
         {
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward,
+
             -Vector3.forward,
             -Vector3.forward,
             -Vector3.forward,
             -Vector3.forward
         };
-        mesh.normals = normals;
+        mesh.RecalculateNormals();
 
-        Vector2[] uv = new Vector2[4]
+        Vector2[] uv = new Vector2[8]
         {
             new Vector2(0, 0),
             new Vector2(1, 0),
+            new Vector2(1, 1),
             new Vector2(0, 1),
-            new Vector2(1, 1)
+
+
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(1, 1),
+            new Vector2(0, 1)
         };
         mesh.uv = uv;
 
         meshFilter.mesh = mesh;
-        mesh.RecalculateNormals();
 
     }
     // Update is called once per frame
@@ -66,6 +98,7 @@ public class OrbitRenderer : MonoBehaviour
     {
         
     }
+
     void OnValidate()
     {
         CreateMash();
