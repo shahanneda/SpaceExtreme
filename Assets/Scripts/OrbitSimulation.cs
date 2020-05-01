@@ -9,7 +9,7 @@ public class OrbitSimulation : MonoBehaviour
     public float simLength = 1000;
 
     public static float GravityConstant = 0.01f;
-    //public float timeScale = 0.01f;
+    public float timeScale = 1f;
 
     public float lastUpdateTime = 0;
     private void FixedUpdate()
@@ -17,7 +17,7 @@ public class OrbitSimulation : MonoBehaviour
         if (Time.time - lastUpdateTime >= timeStep)
         {
 
-            print("Time passed " + (Time.time - lastUpdateTime));
+            //print("Time passed " + (Time.time - lastUpdateTime));
             lastUpdateTime = Time.time;
 
             foreach (SpaceObjectPhysics spaceObjectPhysics in SpaceObjectPhysics.spaceObjects)
@@ -59,7 +59,7 @@ public class OrbitSimulation : MonoBehaviour
         foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
         {
             Vector3[] positions = spaceObject.orbitLineOldPositions.ToArray();
-            LineRenderer lineRenderer = GetComponent<LineRenderer>();
+            LineRenderer lineRenderer = spaceObject.lineRenderer;
             lineRenderer.positionCount = positions.Length;
             lineRenderer.SetPositions(positions);
             lineRenderer.numCornerVertices = 5;

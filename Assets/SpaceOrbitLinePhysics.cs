@@ -16,6 +16,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
     public List<Vector3> orbitLineOldPositions = new List<Vector3>();
 
+    public LineRenderer lineRenderer;
     [HideInInspector]
     public SpaceObjectPhysics objectPhysics;
 
@@ -26,6 +27,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         objectPhysics = GetComponent<SpaceObjectPhysics>();
 
         UpdateOrbitLineValuesFromReal();
+        lineRenderer = GetComponentInChildren<LineRenderer>();
     }
 
     private void OnDisable()

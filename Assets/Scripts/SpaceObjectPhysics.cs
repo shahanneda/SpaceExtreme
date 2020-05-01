@@ -19,7 +19,6 @@ public class SpaceObjectPhysics : MonoBehaviour
     [SerializeField]
     public int mass = 100;
 
-    public float timeScale = 1;
 
     public OrbitSimulation simulation;
 
@@ -69,13 +68,15 @@ public class SpaceObjectPhysics : MonoBehaviour
     }
 
     public void UpdatePosition() {
-        velocity += acceleration * Time.deltaTime;
-        rigidBody.position += velocity * Time.deltaTime; 
+        velocity += acceleration * Time.deltaTime * simulation.timeScale;
+        rigidBody.position += velocity * Time.deltaTime * simulation.timeScale; 
         
     }
     public void OnValidate()
     {
-        simulation.UpdateOrbitSimulation();
+        if (!Application.isPlaying) { 
+          simulation.UpdateOrbitSimulation();
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
