@@ -20,7 +20,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     [HideInInspector]
     public SpaceObjectPhysics objectPhysics;
 
-
+    public SpaceOrbitLinePhysics mostInfluentialBody;
     private void OnEnable()
     {
         spaceObjects.Add(this);
@@ -57,6 +57,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     public void OrbitLineUpdateAcceleration()
     {
         Vector3 netForce = new Vector3(0, 0, 0);
+        Vector3 biggestForce = new Vector3(0, 0, 0);
         foreach (SpaceOrbitLinePhysics spaceObject in spaceObjects)
         {
             if (spaceObject == this)
@@ -70,6 +71,10 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
+            if(force.magnitude > biggestForce.magnitude) {
+                biggestForce = force;
+                mostInfluentialBody = spaceObject; 
+            }
         }
         this.orbitLineAcceleration = netForce / objectPhysics.mass;
     }
@@ -78,5 +83,10 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     {
         this.orbitLineVelocity += orbitLineAcceleration * timeStep  * timeScale;
         this.orbitLinePosition += orbitLineVelocity * timeStep * timeScale;
+    }
+
+    public Vector3 getRelativePosition() { 
+         
+    
     }
 }
