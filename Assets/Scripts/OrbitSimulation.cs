@@ -22,6 +22,12 @@ public class OrbitSimulation : MonoBehaviour
 
     public float loopCheckTolerance = 5f;
 
+    public bool objectOrbitLineIsOn = true;
+
+    public void Start()
+    {
+        UpdateOrbitSimulation();
+    }
     private void FixedUpdate()
     {
         if (Time.time - lastUpdateTime >= timeStep)
@@ -36,7 +42,7 @@ public class OrbitSimulation : MonoBehaviour
             }
         }
 
-        if(Application.isPlaying && Time.time - lastSimulationUpdateTime > autoUpdateOrbitLineSimulationTime) {
+        if(objectOrbitLineIsOn  && Application.isPlaying && Time.time - lastSimulationUpdateTime > autoUpdateOrbitLineSimulationTime ) {
             UpdateOrbitSimulation();        
             lastSimulationUpdateTime = Time.time;
         }
@@ -83,7 +89,14 @@ public class OrbitSimulation : MonoBehaviour
 
         }
 
-
+        if(Application.isPlaying && !objectOrbitLineIsOn) {
+            foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
+            {
+                spaceObject.lineRenderer.positionCount = 0;
+                spaceObject.lineRenderer.SetPositions(new Vector3[0]);
+            }
+            return; 
+        }
         foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
         {
             Vector3[] positions = spaceObject.orbitLineOldPositions.ToArray();

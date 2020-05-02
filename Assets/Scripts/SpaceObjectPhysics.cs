@@ -80,8 +80,7 @@ public class SpaceObjectPhysics : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        print("tes");
-        Destroy(gameObject);
+       // Destroy(gameObject);
     }
     private void OnDestroy()
     {
