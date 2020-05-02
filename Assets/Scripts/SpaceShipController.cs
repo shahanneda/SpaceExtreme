@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpaceShipController : MonoBehaviour
 {
-    public float mouseRotationSpeed;
+    public float mouseRotationSpeed = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +19,11 @@ public class SpaceShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        float xRot = Input.GetAxis("Mouse X") * mouseRotationSpeed;
+        float yRot = Input.GetAxis("Mouse Y") * mouseRotationSpeed;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        transform.Rotate(new Vector3(0, xRot, yRot));
+
     }
 }
