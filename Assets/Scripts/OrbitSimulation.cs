@@ -107,6 +107,7 @@ public class OrbitSimulation : MonoBehaviour
             LineRenderer lineRenderer = spaceObject.lineRenderer;
             lineRenderer.transform.SetParent(spaceObject.mostInfluentialBody.transform);
             lineRenderer.transform.localPosition = new Vector3(0, 0, 0);
+            lineRenderer.gameObject.name = spaceObject.gameObject.name + " Line Renderer";
             
             lineRenderer.useWorldSpace = false;
             lineRenderer.positionCount = positions.Length;

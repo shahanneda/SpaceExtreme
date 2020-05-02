@@ -23,7 +23,7 @@ public class SpaceShipController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space)) {
+        if (Input.GetKey(KeyCode.Space) && !mapOn) {
             spaceObjectPhysics.velocity += transform.right * rocketForce * Time.deltaTime;
         }
         if (Input.GetKeyDown(KeyCode.M)) {
@@ -33,6 +33,7 @@ public class SpaceShipController : MonoBehaviour
                 playerCamera.enabled = false;
                 GameObject.FindGameObjectWithTag("MapCamera").GetComponent<Camera>().enabled = true;
                 spaceObjectPhysics.simulation.objectOrbitLineIsOn = true;
+                spaceObjectPhysics.simulation.UpdateOrbitSimulation();
             }
             else {
                 playerCamera.enabled = true;
@@ -56,6 +57,6 @@ public class SpaceShipController : MonoBehaviour
     }
     void OnGUI()
     {
-        GUI.Label(new Rect(0, 0, 100, 100), (1.0f / Time.smoothDeltaTime).ToString() );
+        //GUI.Label(new Rect(0, 0, 100, 100), (1.0f / Time.smoothDeltaTime).ToString() );
     }
 }

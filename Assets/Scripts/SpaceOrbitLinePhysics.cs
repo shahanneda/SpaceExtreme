@@ -38,7 +38,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         UpdateOrbitLineValuesFromReal();
         //lineRenderer = GetComponentInChildren<LineRenderer>();
         simulation = FindObjectOfType<OrbitSimulation>();
-        mostInfluentialBody = this;
+        //mostInfluentialBody = this;
     }
 
     private void OnDisable()
@@ -101,7 +101,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
             if (distance < biggestDistance && spaceObject.objectPhysics.mass > this.objectPhysics.mass)
             {
                 biggestDistance = distance;
-                mostInfluentialBody = spaceObject;
+                //mostInfluentialBody = spaceObject; mannually set for now
             }
         }
         this.orbitLineAcceleration = netForce / objectPhysics.mass;
