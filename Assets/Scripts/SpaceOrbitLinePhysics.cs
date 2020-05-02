@@ -27,6 +27,8 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     [HideInInspector]
     public OrbitSimulation simulation;
 
+    public int indexToStopLineAt = int.MaxValue;
+
     private void OnEnable()
     {
         spaceObjects.Add(this);
@@ -54,8 +56,10 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         orbitLinePosition = transform.position;
         orbitLineAcceleration = new Vector3(0, 0, 0);
         Material colorMat = new Material(Shader.Find("Unlit/Color"));
+        orbitColor.a = 0.2f;
         colorMat.color = orbitColor;
         lineRenderer.material = colorMat;
+        indexToStopLineAt = int.MaxValue;
 
     }
 
@@ -63,7 +67,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     private void OnDestroy()
     {
         if (Application.isPlaying) { 
-            Destroy(this.GetComponent<Renderer>().material);
+            Destroy(lineRenderer.GetComponent<Renderer>().material);
         }
 
         SpaceOrbitLinePhysics.spaceObjects.Remove(this);

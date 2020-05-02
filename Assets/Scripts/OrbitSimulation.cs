@@ -20,6 +20,8 @@ public class OrbitSimulation : MonoBehaviour
     public float autoUpdateOrbitLineSimulationTime = 1f;
     private float lastSimulationUpdateTime = 0;
 
+    public float loopCheckTolerance = 5f;
+
     private void FixedUpdate()
     {
         if (Time.time - lastUpdateTime >= timeStep)
@@ -65,8 +67,18 @@ public class OrbitSimulation : MonoBehaviour
                 spaceObject.OrbitLineUpdatePosition(orbitCalculationTimeStep, 1);
 
                 relativeObject = spaceObject.mostInfluentialBody;
-                Vector3 howMuchRelMoved = relativeObject.orbitLinePosition - relativeObject.transform.position;
-                spaceObject.orbitLineOldPositions.Add(spaceObject.orbitLinePosition -howMuchRelMoved);
+                Vector3 howMuchRelMoved = relativeObject.orbitLinePosition - relativeObject.transform.position;// how much the thinng we are orbiting has moved since this sim
+                Vector3 positionWithRelAdjusted = spaceObject.orbitLinePosition - howMuchRelMoved;// the real positinon adjusted for the movement of the orbiitng
+
+                float distanceBetweenStartAndNow = Vector3.Distance(positionWithRelAdjusted, spaceObject.transform.position);
+
+                //if (i > simLength/2 && distanceBetweenStartAndNow < loopCheckTolerance && spaceObject.indexToStopLineAt == int.MaxValue) {
+                 //   spaceObject.indexToStopLineAt = i;
+                //}
+                //else { 
+                  spaceObject.orbitLineOldPositions.Add(positionWithRelAdjusted);
+                //}
+
             }
 
         }
