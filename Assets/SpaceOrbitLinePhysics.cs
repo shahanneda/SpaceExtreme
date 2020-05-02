@@ -35,6 +35,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         UpdateOrbitLineValuesFromReal();
         lineRenderer = GetComponentInChildren<LineRenderer>();
         simulation = FindObjectOfType<OrbitSimulation>();
+        mostInfluentialBody = this;
     }
 
     private void OnDisable()
@@ -77,6 +78,8 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     {
         Vector3 netForce = new Vector3(0, 0, 0);
         Vector3 biggestForce = new Vector3(0, 0, 0);
+
+        float biggestDistance = float.MaxValue;
         foreach (SpaceOrbitLinePhysics spaceObject in spaceObjects)
         {
             if (spaceObject == this)
@@ -90,9 +93,9 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
-            if (force.magnitude > biggestForce.magnitude)
+            if (distance < biggestDistance && spaceObject.objectPhysics.mass > this.objectPhysics.mass)
             {
-                biggestForce = force;
+                biggestDistance = distance;
                 mostInfluentialBody = spaceObject;
             }
         }

@@ -63,6 +63,8 @@ public class OrbitSimulation : MonoBehaviour
             foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
             {
                 spaceObject.OrbitLineUpdatePosition(orbitCalculationTimeStep, 1);
+
+                relativeObject = spaceObject.mostInfluentialBody;
                 Vector3 howMuchRelMoved = relativeObject.orbitLinePosition - relativeObject.transform.position;
                 spaceObject.orbitLineOldPositions.Add(spaceObject.orbitLinePosition -howMuchRelMoved);
             }
