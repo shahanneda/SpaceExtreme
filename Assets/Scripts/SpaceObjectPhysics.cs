@@ -83,5 +83,9 @@ public class SpaceObjectPhysics : MonoBehaviour
         print("tes");
         Destroy(gameObject);
     }
+    private void OnDestroy()
+    {
+        SpaceObjectPhysics.spaceObjects.Remove(this);
+    }
 
 }

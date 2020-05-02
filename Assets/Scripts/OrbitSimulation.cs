@@ -6,15 +6,20 @@ using UnityEngine;
 public class OrbitSimulation : MonoBehaviour
 {
     public float timeStep = 0.5f;
+    private float lastUpdateTime = 0;
+    
     public float orbitCalculationTimeStep = 0.5f;
     public float simLength = 1000;
 
     public static float GravityConstant = 0.01f;
     public float timeScale = 1f;
 
-    public float lastUpdateTime = 0;
 
     public SpaceOrbitLinePhysics relativeObject;
+
+    public float autoUpdateOrbitLineSimulationTime = 1f;
+    private float lastSimulationUpdateTime = 0;
+
     private void FixedUpdate()
     {
         if (Time.time - lastUpdateTime >= timeStep)
@@ -27,6 +32,11 @@ public class OrbitSimulation : MonoBehaviour
             {
                 spaceObjectPhysics.UpdateAcceleration();
             }
+        }
+
+        if(Application.isPlaying && Time.time - lastSimulationUpdateTime > autoUpdateOrbitLineSimulationTime) {
+            UpdateOrbitSimulation();        
+            lastSimulationUpdateTime = Time.time;
         }
 
         foreach (SpaceObjectPhysics spaceObjectPhysics in SpaceObjectPhysics.spaceObjects)

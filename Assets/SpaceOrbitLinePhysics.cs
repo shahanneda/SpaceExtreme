@@ -8,19 +8,25 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     public static List<SpaceOrbitLinePhysics> spaceObjects = new List<SpaceOrbitLinePhysics>();
 
     [HideInInspector]
-    public Vector3 orbitLinePosition = new Vector3(0,0,0);
+    public Vector3 orbitLinePosition = new Vector3(0, 0, 0);
     [HideInInspector]
-    public Vector3 orbitLineVelocity = new Vector3(0,0,0);
+    public Vector3 orbitLineVelocity = new Vector3(0, 0, 0);
     [HideInInspector]
-    public Vector3 orbitLineAcceleration = new Vector3(0,0,0);
+    public Vector3 orbitLineAcceleration = new Vector3(0, 0, 0);
 
     public List<Vector3> orbitLineOldPositions = new List<Vector3>();
+
+    public Color orbitColor = Color.white;
 
     public LineRenderer lineRenderer;
     [HideInInspector]
     public SpaceObjectPhysics objectPhysics;
 
     public SpaceOrbitLinePhysics mostInfluentialBody;
+
+    [HideInInspector]
+    public OrbitSimulation simulation;
+
     private void OnEnable()
     {
         spaceObjects.Add(this);
@@ -28,6 +34,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
         UpdateOrbitLineValuesFromReal();
         lineRenderer = GetComponentInChildren<LineRenderer>();
+        simulation = FindObjectOfType<OrbitSimulation>();
     }
 
     private void OnDisable()
@@ -45,9 +52,21 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         orbitLineVelocity = objectPhysics.velocity;
         orbitLinePosition = transform.position;
         orbitLineAcceleration = new Vector3(0, 0, 0);
+        Material colorMat = new Material(Shader.Find("Unlit/Color"));
+        colorMat.color = orbitColor;
+        lineRenderer.material = colorMat;
 
     }
 
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying) { 
+            Destroy(this.GetComponent<Renderer>().material);
+        }
+
+        SpaceOrbitLinePhysics.spaceObjects.Remove(this);
+    }
 
     private void FixedUpdate()
     {
@@ -71,9 +90,10 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
-            if(force.magnitude > biggestForce.magnitude) {
+            if (force.magnitude > biggestForce.magnitude)
+            {
                 biggestForce = force;
-                mostInfluentialBody = spaceObject; 
+                mostInfluentialBody = spaceObject;
             }
         }
         this.orbitLineAcceleration = netForce / objectPhysics.mass;
@@ -81,12 +101,9 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
     public void OrbitLineUpdatePosition(float timeStep, float timeScale)
     {
-        this.orbitLineVelocity += orbitLineAcceleration * timeStep  * timeScale;
+        this.orbitLineVelocity += orbitLineAcceleration * timeStep * timeScale;
         this.orbitLinePosition += orbitLineVelocity * timeStep * timeScale;
     }
 
-    public Vector3 getRelativePosition() { 
-         
-    
-    }
+
 }
