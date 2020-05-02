@@ -13,10 +13,15 @@ public class SpaceShipController : MonoBehaviour
     public float rocketForce = 0.5f;
 
     private Camera playerCamera;
+
+    private Rigidbody rb;
+
+    public bool mouseControl = true;
     // Start is called before the first frame update
     void Start()
     {
         spaceObjectPhysics = GetComponent<SpaceObjectPhysics>();
+        rb = GetComponent<Rigidbody>();
         playerCamera = GetComponentInChildren<Camera>();
     }
 
@@ -24,7 +29,7 @@ public class SpaceShipController : MonoBehaviour
     void Update()
     {
         if (Input.GetKey(KeyCode.Space) && !mapOn) {
-            spaceObjectPhysics.velocity += transform.right * rocketForce * Time.deltaTime;
+            spaceObjectPhysics.velocity += -transform.right * rocketForce * Time.deltaTime;
         }
         if (Input.GetKeyDown(KeyCode.M)) {
             mapOn = !mapOn;
@@ -49,14 +54,22 @@ public class SpaceShipController : MonoBehaviour
         float xRot = Input.GetAxis("Mouse X") * mouseRotationSpeed;
         float yRot = Input.GetAxis("Mouse Y") * mouseRotationSpeed;
         Cursor.lockState = CursorLockMode.Locked;
-
-        transform.Rotate(new Vector3(0, xRot, yRot));
-        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        if (mouseControl) { 
+          transform.Rotate(new Vector3(0, xRot, yRot));
+          transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        }
 
 
     }
     void OnGUI()
     {
         //GUI.Label(new Rect(0, 0, 100, 100), (1.0f / Time.smoothDeltaTime).ToString() );
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        rb.isKinematic = true;
+        spaceObjectPhysics.RemoveFromSimulation();
+
     }
 }

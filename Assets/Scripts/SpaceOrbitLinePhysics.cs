@@ -79,6 +79,14 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
 
     }
 
+    public void Update()
+    {
+        if (!Application.isPlaying && transform.hasChanged) {
+            transform.hasChanged = false;
+            simulation.UpdateOrbitSimulation();
+        }
+        
+    }
     public void OrbitLineUpdateAcceleration()
     {
         Vector3 netForce = new Vector3(0, 0, 0);
@@ -95,7 +103,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
             Vector3 directionVector = (spaceObject.orbitLinePosition - this.orbitLinePosition).normalized;
 
             float distance = Mathf.Abs(Vector3.Distance(spaceObject.orbitLinePosition, this.orbitLinePosition));
-
+            distance *= simulation.scaleFactor;
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.objectPhysics.mass * spaceObject.objectPhysics.mass / (distance * distance));
             netForce += force;
             if (distance < biggestDistance && spaceObject.objectPhysics.mass > this.objectPhysics.mass)

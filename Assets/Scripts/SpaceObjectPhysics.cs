@@ -24,7 +24,7 @@ public class SpaceObjectPhysics : MonoBehaviour
 
     private void OnEnable()
     {
-        spaceObjects.Add(this);
+        AddToSimulation();
         simulation = FindObjectOfType<OrbitSimulation>();
     }
 
@@ -58,8 +58,8 @@ public class SpaceObjectPhysics : MonoBehaviour
            } 
              
             Vector3 directionVector = (spaceObject.transform.position - this.transform.position).normalized;
-
             float distance = Mathf.Abs(Vector3.Distance(spaceObject.transform.position, this.transform.position));
+            distance *= simulation.scaleFactor;
 
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.mass * spaceObject.mass / (distance * distance));
             netForce += force;
@@ -85,7 +85,18 @@ public class SpaceObjectPhysics : MonoBehaviour
     }
     private void OnDestroy()
     {
+        RemoveFromSimulation(); 
+    }
+
+    public void RemoveFromSimulation() { 
+         
         SpaceObjectPhysics.spaceObjects.Remove(this);
     }
+    public void AddToSimulation() {
+        if (!SpaceObjectPhysics.spaceObjects.Contains(this)) { 
+          SpaceObjectPhysics.spaceObjects.Add(this);
+        }
+    }
+        
 
 }
