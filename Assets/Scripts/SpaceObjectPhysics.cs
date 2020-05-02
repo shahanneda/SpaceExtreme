@@ -69,7 +69,8 @@ public class SpaceObjectPhysics : MonoBehaviour
 
     public void UpdatePosition() {
         velocity += acceleration * Time.deltaTime * simulation.timeScale;
-        rigidBody.position += velocity * Time.deltaTime * simulation.timeScale; 
+        rigidBody.velocity = velocity * simulation.timeScale;
+       // rigidBody.position += velocity * Time.deltaTime * simulation.timeScale; 
         
     }
     public void OnValidate()

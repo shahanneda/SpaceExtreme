@@ -100,7 +100,15 @@ public class OrbitSimulation : MonoBehaviour
         foreach (SpaceOrbitLinePhysics spaceObject in SpaceOrbitLinePhysics.spaceObjects)
         {
             Vector3[] positions = spaceObject.orbitLineOldPositions.ToArray();
+            for(int i =0; i<positions.Length; i++) {
+                positions[i] = spaceObject.mostInfluentialBody.transform.InverseTransformPoint(positions[i]); 
+            }
+             // We need the orbit to follwo what ever its orbiting, so we need to change the orbit line of the most influencail obect
             LineRenderer lineRenderer = spaceObject.lineRenderer;
+            lineRenderer.transform.SetParent(spaceObject.mostInfluentialBody.transform);
+            lineRenderer.transform.localPosition = new Vector3(0, 0, 0);
+            
+            lineRenderer.useWorldSpace = false;
             lineRenderer.positionCount = positions.Length;
             lineRenderer.SetPositions(positions);
             lineRenderer.numCornerVertices = 5;

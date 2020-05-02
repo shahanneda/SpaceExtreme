@@ -19,6 +19,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     public Color orbitColor = Color.white;
 
     public LineRenderer lineRenderer;
+
     [HideInInspector]
     public SpaceObjectPhysics objectPhysics;
 
@@ -35,7 +36,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
         objectPhysics = GetComponent<SpaceObjectPhysics>();
 
         UpdateOrbitLineValuesFromReal();
-        lineRenderer = GetComponentInChildren<LineRenderer>();
+        //lineRenderer = GetComponentInChildren<LineRenderer>();
         simulation = FindObjectOfType<OrbitSimulation>();
         mostInfluentialBody = this;
     }
