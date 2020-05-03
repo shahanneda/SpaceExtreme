@@ -21,30 +21,28 @@ public class SpaceObjectPhysics : MonoBehaviour
 
 
     public OrbitSimulation simulation;
+    public SpaceOrbitLinePhysics orbitLinePhysics;
 
     private void OnEnable()
     {
         AddToSimulation();
         simulation = FindObjectOfType<OrbitSimulation>();
+        orbitLinePhysics = GetComponent<SpaceOrbitLinePhysics>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     private void OnDisable()
     {
-        spaceObjects.Remove(this); 
+        RemoveFromSimulation();
     }
 
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody>();
     }
-
          
-    // Update is called once per frame
     void Update()
     {
-        
     }
-
     private void FixedUpdate()
     {
 
@@ -91,10 +89,14 @@ public class SpaceObjectPhysics : MonoBehaviour
     public void RemoveFromSimulation() { 
          
         SpaceObjectPhysics.spaceObjects.Remove(this);
+        SpaceOrbitLinePhysics.spaceObjects.Remove(orbitLinePhysics);
     }
     public void AddToSimulation() {
         if (!SpaceObjectPhysics.spaceObjects.Contains(this)) { 
           SpaceObjectPhysics.spaceObjects.Add(this);
+        }
+        if (!SpaceOrbitLinePhysics.spaceObjects.Contains(orbitLinePhysics) && orbitLinePhysics) {
+            SpaceOrbitLinePhysics.spaceObjects.Add(orbitLinePhysics);
         }
     }
         
