@@ -23,12 +23,20 @@ public class SpaceObjectPhysics : MonoBehaviour
     public OrbitSimulation simulation;
     public SpaceOrbitLinePhysics orbitLinePhysics;
 
+    public bool AffectsOther = true;
+
+    //this is to turn off the physics for special cases such as when landed on a planet
+    public bool shouldChangeRigidBodyValues = true;
+
+    //used for aligning the players camera when landed
+    public Vector3 strongestGravitationalForce;
     private void OnEnable()
     {
         AddToSimulation();
         simulation = FindObjectOfType<OrbitSimulation>();
         orbitLinePhysics = GetComponent<SpaceOrbitLinePhysics>();
         rigidBody = GetComponent<Rigidbody>();
+        strongestGravitationalForce = Vector3.zero;
     }
 
     private void OnDisable()
@@ -51,9 +59,9 @@ public class SpaceObjectPhysics : MonoBehaviour
     public void UpdateAcceleration() {
         Vector3 netForce = new Vector3(0,0,0);
         foreach(SpaceObjectPhysics spaceObject in spaceObjects) {
-           if(spaceObject == this) {
-                continue;
-           } 
+             if(spaceObject == this || !spaceObject.AffectsOther) {
+                  continue;
+             } 
              
             Vector3 directionVector = (spaceObject.transform.position - this.transform.position).normalized;
             float distance = Mathf.Abs(Vector3.Distance(spaceObject.transform.position, this.transform.position));
@@ -61,19 +69,24 @@ public class SpaceObjectPhysics : MonoBehaviour
 
             Vector3 force = directionVector * (float)(OrbitSimulation.GravityConstant * this.mass * spaceObject.mass / (distance * distance));
             netForce += force;
+            if(force.magnitude > strongestGravitationalForce.magnitude) {
+                strongestGravitationalForce = force; 
+            }
         }
         acceleration = netForce / mass;
     }
 
     public void UpdatePosition() {
         velocity += acceleration * Time.deltaTime * simulation.timeScale;
-        rigidBody.velocity = velocity * simulation.timeScale;
+        if (shouldChangeRigidBodyValues) { 
+          rigidBody.velocity = velocity * simulation.timeScale;
+        }
        // rigidBody.position += velocity * Time.deltaTime * simulation.timeScale; 
         
     }
     public void OnValidate()
     {
-        if (!Application.isPlaying) { 
+        if (!Application.isPlaying && orbitLinePhysics) { 
           simulation.UpdateOrbitSimulation();
         }
     }
@@ -89,13 +102,16 @@ public class SpaceObjectPhysics : MonoBehaviour
     public void RemoveFromSimulation() { 
          
         SpaceObjectPhysics.spaceObjects.Remove(this);
-        SpaceOrbitLinePhysics.spaceObjects.Remove(orbitLinePhysics);
+        if (orbitLinePhysics) { 
+          SpaceOrbitLinePhysics.spaceObjects.Remove(orbitLinePhysics);
+        }
+
     }
     public void AddToSimulation() {
         if (!SpaceObjectPhysics.spaceObjects.Contains(this)) { 
           SpaceObjectPhysics.spaceObjects.Add(this);
         }
-        if (!SpaceOrbitLinePhysics.spaceObjects.Contains(orbitLinePhysics) && orbitLinePhysics) {
+        if (!SpaceOrbitLinePhysics.spaceObjects.Contains(orbitLinePhysics) && orbitLinePhysics && orbitLinePhysics) {
             SpaceOrbitLinePhysics.spaceObjects.Add(orbitLinePhysics);
         }
     }

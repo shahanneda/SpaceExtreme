@@ -19,13 +19,18 @@ public class SpaceShipController : MonoBehaviour
     public bool mouseControl = true;
 
     public bool hasLanded = false;
-    // Start is called before the first frame update
+
+    private PlayerMovementController playerMovement;
+
+   
+
     void Start()
     {
         spaceObjectPhysics = GetComponent<SpaceObjectPhysics>();
         rb = GetComponent<Rigidbody>();
         playerCamera = GetComponentInChildren<Camera>();
-        playerBody = GetComponenetInChildren<PlayerMovementController>();
+        playerMovement = GetComponentInChildren<PlayerMovementController>();
+        playerMovement.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -70,10 +75,10 @@ public class SpaceShipController : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-
         rb.isKinematic = true;
         spaceObjectPhysics.RemoveFromSimulation();
         hasLanded = true;
-
+        mouseControl = false;
+        playerMovement.gameObject.SetActive(true);
     }
 }

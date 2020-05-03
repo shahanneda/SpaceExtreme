@@ -68,7 +68,7 @@ public class SpaceOrbitLinePhysics : MonoBehaviour
     private void OnDestroy()
     {
         if (Application.isPlaying) { 
-            Destroy(lineRenderer.GetComponent<Renderer>().material);
+           //Destroy(lineRenderer.GetComponent<Renderer>().material);
         }
 
         SpaceOrbitLinePhysics.spaceObjects.Remove(this);

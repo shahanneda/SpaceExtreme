@@ -24,6 +24,7 @@ public class OrbitSimulation : MonoBehaviour
 
     public bool objectOrbitLineIsOn = true;
 
+
     public float scaleFactor;
     public void Start()
     {
