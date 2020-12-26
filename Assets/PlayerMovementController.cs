@@ -48,7 +48,7 @@ public class PlayerMovementController : MonoBehaviour
         if (mouseControl)
         {
             playerCamera.transform.Rotate(new Vector3(yRot, xRot, 0));
-            //transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
         }
     }
     public void FixedUpdate()
@@ -57,8 +57,24 @@ public class PlayerMovementController : MonoBehaviour
 
         Vector3 gravityUp = -spaceObjectPhysics.strongestGravitationalForce.normalized;
         //this aligns our up to the strongest gravtiation force(should be planet center)
-        rb.AddForce(gravityUp * surfaceGravityScale, ForceMode.Force);
-        rb.rotation = Quaternion.FromToRotation(transform.up, gravityUp) * rb.rotation;
+        Ray ray = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, float.PositiveInfinity)) {
+
+            Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            Quaternion finalRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, float.PositiveInfinity);
+
+            transform.rotation = finalRotation;
+            transform.position = hit.point + hit.normal * .5f;
+
+
+        }
+
+        
+
+
+        //rb.AddForce(-gravityUp * surfaceGravityScale, ForceMode.Force);
+        //playerCamera.transform.rotation = Quaternion.FromToRotation(playerCamera.transform.up, gravityUp) * playerCamera.transform.rotation;
 
     }
 

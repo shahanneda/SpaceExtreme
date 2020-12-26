@@ -58,6 +58,7 @@ public class SpaceObjectPhysics : MonoBehaviour
 
     public void UpdateAcceleration() {
         Vector3 netForce = new Vector3(0,0,0);
+        strongestGravitationalForce = Vector3.zero;
         foreach(SpaceObjectPhysics spaceObject in spaceObjects) {
              if(spaceObject == this || !spaceObject.AffectsOther) {
                   continue;
